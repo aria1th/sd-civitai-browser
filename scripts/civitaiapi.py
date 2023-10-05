@@ -181,6 +181,11 @@ def wrapped_download_file_thread(url, file_name, content_type, use_new_folder, m
     # check if it is valid url
     if not url or not url.startswith("http"):
         return f"No valid URL provided: {url}"
+    # check if filename has extensions, if not, add .safetensors
+    if not file_name:
+        return f"No file name provided: {file_name}"
+    if "." not in file_name:
+        file_name = file_name + ".safetensors"
     if content_type not in ["Checkpoint", "Hypernetwork", "TextualInversion", "AestheticGradient", "VAE", "LORA", "LoCon"]:
         return f"Invalid content type, given {content_type} but expected one of ['Checkpoint', 'Hypernetwork', 'TextualInversion', 'AestheticGradient', 'VAE', 'LORA', 'LoCon']"
     if not model_name:
@@ -623,31 +628,31 @@ def on_ui_tabs():
                     list_versions,
                     ]
                 )
-        with gr.TabItem("Manual") as manual_tab:
-            # Manual Tab, you can input your own URL and file name.
-            input_url_textbox = gr.Textbox(label="URL", interactive=True, lines=1)
-            input_filename_textbox = gr.Textbox(label="File Name", interactive=True, lines=1)
-            content_type_dropdown = gr.Dropdown(label="Content Type", 
-                                                choices=["Checkpoint","Hypernetwork","TextualInversion","AestheticGradient", "VAE", "LORA", "LoCon"], 
-                                                interactive=True, value="Checkpoint")
-            use_new_folder_checkbox = gr.Checkbox(label="Save to new folder", value=False)
-            input_foldername_textbox = gr.Textbox(label="Folder Name(Optional)", interactive=True, lines=1) # can be empty
-            download_button = gr.Button(label="Download", value="Download")
+            with gr.TabItem("Manual") as manual_tab:
+                # Manual Tab, you can input your own URL and file name.
+                input_url_textbox = gr.Textbox(label="URL", interactive=True, lines=1)
+                input_filename_textbox = gr.Textbox(label="File Name", interactive=True, lines=1)
+                content_type_dropdown = gr.Dropdown(label="Content Type",
+                                                    choices=["Checkpoint","Hypernetwork","TextualInversion","AestheticGradient", "VAE", "LORA", "LoCon"],
+                                                    interactive=True, value="Checkpoint")
+                use_new_folder_checkbox = gr.Checkbox(label="Save to new folder", value=False)
+                input_foldername_textbox = gr.Textbox(label="Folder Name(Optional)", interactive=True, lines=1) # can be empty
+                download_button = gr.Button(label="Download", value="Download")
 
-            debug_result_textbox = gr.Textbox(label="Debug Result", interactive=False, lines=1)
-            download_button.click(
-                fn=wrapped_download_file_thread,
-                inputs=[
-                    input_url_textbox,
-                    input_filename_textbox,
-                    content_type_dropdown,
-                    use_new_folder_checkbox,
-                    input_foldername_textbox,
-                ],
-                outputs=[
-                    debug_result_textbox,
-                ]
-            )
+                debug_result_textbox = gr.Textbox(label="Debug Result", interactive=False, lines=1)
+                download_button.click(
+                    fn=wrapped_download_file_thread,
+                    inputs=[
+                        input_url_textbox,
+                        input_filename_textbox,
+                        content_type_dropdown,
+                        use_new_folder_checkbox,
+                        input_foldername_textbox,
+                    ],
+                    outputs=[
+                        debug_result_textbox,
+                    ]
+                )
         
 
     return (civitai_interface, "CivitAi", "civitai_interface"),
