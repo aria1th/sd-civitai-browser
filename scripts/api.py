@@ -5,11 +5,13 @@ import gradio as gr
 import threading
 from pydantic import BaseModel
 from typing import List, Optional, Tuple, Union
-from scripts.civitaiapi import download_file_thread
 from secrets import compare_digest
 from fastapi import HTTPException
 from fastapi import Depends, FastAPI, Form
 from fastapi.security import HTTPBasic, HTTPBasicCredentials
+
+def download_file_thread(*args, **kwargs):
+    pass # dummy
 
 ### ====================classes========================
 class DownloadRequestResponse(BaseModel):
