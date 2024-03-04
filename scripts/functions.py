@@ -93,9 +93,12 @@ def download_file(url, file_name):
                     try:
                         # Send a GET request to the URL and save the response to the local file
                         response = requests.get(url, headers=headers, stream=True)
-
+                        response.raise_for_status()
                         # Get the total size of the file
                         total_size = int(response.headers.get("Content-Length", 0))
+                        if total_size < 3072: #3KB
+                            # raise AuthenticationError if the file is too small
+                            raise RuntimeError(f"File too small: {total_size} bytes, possible authentication error.")
 
                         # Update the total size of the progress bar if the `Content-Length` header is present
                         if total_size == 0:
